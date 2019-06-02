@@ -32,13 +32,10 @@ var removed_enemies = [];
 var beers = [];
 var removed_beers = [];
 
-var score = 0;
-var scoreText;
+var score = 0, finalScore = 0;
+var scoreText, finalText;
 
 var scene;
-
-var ocool_timer = 0;
-var ocool = false;
 
 function preload ()
 {
@@ -64,10 +61,6 @@ function preload ()
 }
 
 
-
-
-
-
 function create ()
 {
   scene = this;
@@ -76,9 +69,6 @@ function create ()
 
   //bgs.append(this.add.sprite(0, 0, 'rocks_1'));
   //bgs.append(this.add.sprite(-1920, 0, 'rocks_1'));
-
-
-
 
   bg = this.add.tileSprite(512,256,1024,512,'bg');
   floor = this.add.tileSprite(512,512-63,1024,126,'floor');
@@ -113,6 +103,9 @@ function create ()
     frameRate: 8,
     repeat: -1
   });
+  
+
+  finalText = this.add.text(16, 64, 'Bästa Drägg: 0', { fontSize: '32px', fill: '#000' });
 
   scoreText = this.add.text(16, 16, 'Drägg: 0', { fontSize: '32px', fill: '#000' });
 }
@@ -173,18 +166,23 @@ function update ()
 
 
 }
+function finalTextDisplay()
+{
 
-
+}
 function collide_enemy(player,enemy){
 
   enemy.disableBody(true, true);
   scene.sound.play("vafan");
 
-  score = 0;
   scoreText.setText('Drägg: ' + score);
+  if(finalScore < score){
+    finalScore = score;
+    finalText.setText('Bästa Drägg: ' + finalScore);
 
-  ocool = true;
-  ocool_timer = 0;
+  }
+  score = 0;
+
 
   for(var i = 0; i < enemies.length; i++){
     enemies[i].destroy();
@@ -192,6 +190,7 @@ function collide_enemy(player,enemy){
   for(var i = 0; i < beers.length; i++){
     beers[i].destroy();
   }
+
   enemies = [];
   beers = [];
 }
